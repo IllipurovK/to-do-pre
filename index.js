@@ -1,4 +1,4 @@
-let items = [
+const items = [
 	"Сделать проектную работу",
 	"Полить цветы",
 	"Пройти туториал по Реакту",
@@ -6,7 +6,8 @@ let items = [
 	"Прогуляться по улице в солнечный день",
 	"Помыть посуду",
 ];
-const STORAGE_KEY = "toDoTasks";
+
+const storageKey = "toDoTasks";
 
 const listElement = document.querySelector(".to-do__list");
 const formElement = document.querySelector(".to-do__form");
@@ -14,7 +15,7 @@ const inputElement = document.querySelector(".to-do__input");
 
 
 function loadTasks() {
-	const saved = localStorage.getItem(STORAGE_KEY);
+	const saved = localStorage.getItem(storageKey);
 	
 	if (saved) {
 		return JSON.parse(saved);
@@ -35,8 +36,8 @@ function createItem(item) {
 	deleteButton.addEventListener("click", () => {
 		clone.remove();
 
-		const items = getTasksFromDOM();
-		saveTasks(items);
+		const tasks = getTasksFromDOM();
+		saveTasks(tasks);
   	});
 
 	duplicateButton.addEventListener("click", () => {
@@ -45,8 +46,8 @@ function createItem(item) {
 		const newItem = createItem(itemName);
 		listElement.prepend(newItem);
 
-		const items = getTasksFromDOM();
-		saveTasks(items);
+		const tasks = getTasksFromDOM();
+		saveTasks(tasks);
 	});
 
 	editButton.addEventListener("click", () => {
@@ -57,15 +58,15 @@ function createItem(item) {
 	textElement.addEventListener("blur", () => {
 		textElement.setAttribute("contenteditable", "false");
 
-		const items = getTasksFromDOM();
-		saveTasks(items);
+		const tasks = getTasksFromDOM();
+		saveTasks(tasks);
 	});
 
 	return clone;
 }
 
 function getTasksFromDOM() {
-  const itemsNamesElements = document.querySelectorAll(".to-do__item-text");
+  const itemsNamesElements = listElement.querySelectorAll(".to-do__item-text");
   const tasks = [];
 
   itemsNamesElements.forEach((el) => {
@@ -76,12 +77,12 @@ function getTasksFromDOM() {
 }
 
 function saveTasks(tasks) {
-	localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+	localStorage.setItem(storageKey, JSON.stringify(tasks));
 }
 
-items = loadTasks();
-items.forEach((item) => {
-	const taskElement = createItem(item);
+const tasksOnLoad = loadTasks();
+tasksOnLoad.forEach((task) => {
+	const taskElement = createItem(task);
 	listElement.append(taskElement);
 });
 
@@ -94,8 +95,8 @@ formElement.addEventListener("submit", (evt) => {
   const taskElement = createItem(value);
   listElement.prepend(taskElement);
 
-  items = getTasksFromDOM();
-  saveTasks(items);
+  const tasks = getTasksFromDOM();
+  saveTasks(tasks);
 
 
   inputElement.value = "";
